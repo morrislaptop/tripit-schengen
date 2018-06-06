@@ -75,7 +75,7 @@ class HomeController extends Controller
             $end = new DateTimeImmutable($trip['end_date']);
             $start = new DateTimeImmutable($trip['start_date']);
 
-            return $end > $since || $start > $now;
+            return $end >= $since || $start >= $now;
         })->values();
 
         $debug = [];
