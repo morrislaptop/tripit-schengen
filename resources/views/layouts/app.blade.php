@@ -21,10 +21,6 @@
                 margin: 0;
             }
 
-            body {
-                padding: 1rem;
-            }
-
             html, body, input, select, textarea, button {
                 font-family: 'Raleway', sans-serif;
                 font-size: 16px;
@@ -32,6 +28,9 @@
 
             .full-height {
                 min-height: 100vh;
+                box-sizing: border-box;
+                padding: 1rem;
+                padding-bottom: 51px; /* room for made with */
             }
 
             .flex-center {
@@ -83,6 +82,12 @@
                 border-bottom: 1px solid #f5f5f5;
             }
 
+            .footer {
+                font-size: 14px;
+                position: absolute;
+                bottom: 0;
+            }
+
             @media (max-width: 450px)  {
                 .title {
                     font-size: 62px;
@@ -102,9 +107,8 @@
                 </div>
 
                 @yield('content')
-
-                <p class="m-b-md">Made with ❤️ by <a href="https://craigmorris.io">morrislaptop</a></p>
             </div>
+            <p class="footer">Made with ❤️by <a href="https://craigmorris.io">morrislaptop</a></p>
         </div>
     </body>
 </html>
