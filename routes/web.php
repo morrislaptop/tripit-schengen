@@ -16,4 +16,5 @@ Route::get('/', function () {
 });
 
 Route::get('login', 'HomeController@redirectToProvider');
+Route::get('callback', 'HomeController@handleProviderCallback');
 Route::get('calculate', 'HomeController@calculate');

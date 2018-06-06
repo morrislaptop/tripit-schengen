@@ -43,7 +43,7 @@ class Server extends BaseServer
      */
     public function urlUserDetails()
     {
-        return 'https://api.tripit.com/v1/list/trip';
+        throw new \BadMethodCallException('TripIt does not have a user endpoint');
     }
 
     /**
