@@ -112,13 +112,6 @@
                             <td>{{ $trip['remaining'] }}</td>
                         </tr>
                     @endforeach
-                    <tr>
-                        <td align="left"><em>Days Back</em></td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td><em>{{ $waiting }}</em></td>
-                        <td>{{ $remaining }}</td>
-                    </tr>
                 </table>
 
             </div>

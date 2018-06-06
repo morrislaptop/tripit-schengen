@@ -117,17 +117,10 @@ class HomeController extends Controller
             return $carry + $diff;
         }, 0);
 
-        // Add the days since they've been back (if they've returned before $now)
-        $waiting = 0;
-        $returned = new DateTimeImmutable($trips->sortBy('end_date')->last()['end_date']);
-        if ($returned < $now) {
-            $waiting = $now->diff($returned)->days;
-        }
-
         // Render the view
         $log = $this->getTripLog($trips, $debug);
-        $remaining = 90 - $in + $waiting;
-        return view('calculate', compact('log', 'remaining', 'in', 'now', 'waiting'));
+        $remaining = 90 - $in;
+        return view('calculate', compact('log', 'remaining', 'in', 'now'));
     }
 
     protected function isInTheMiddleOfAnotherTrip($trip, $trips) {
