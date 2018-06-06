@@ -120,7 +120,7 @@ class HomeController extends Controller
         // Render the view
         $log = $this->getTripLog($trips, $debug);
         $remaining = 90 - $in;
-        return view('calculate', compact('log', 'remaining', 'in', 'now'));
+        return view('calculate', compact('log', 'remaining', 'in', 'since', 'now'));
     }
 
     protected function isInTheMiddleOfAnotherTrip($trip, $trips) {

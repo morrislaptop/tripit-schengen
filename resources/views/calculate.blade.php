@@ -97,11 +97,11 @@
                         <th>Remaining</th>
                     </tr>
                     <tr>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>90</th>
+                        <td align="left"><em>From {{ $since->format('d M Y') }}</em></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td><em>90</em></td>
                     </tr>
                     @foreach ($log as $trip)
                         <tr>
