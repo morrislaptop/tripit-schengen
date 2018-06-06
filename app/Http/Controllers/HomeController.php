@@ -80,7 +80,7 @@ class HomeController extends Controller
 
         $debug = [];
 
-        $in = $trips->reduce(function ($carry, $trip) use ($since, $now, &$debug) {
+        $in = $trips->reduce(function ($carry, $trip) use ($since, $now, $trips, &$debug) {
             $end = new DateTimeImmutable($trip['end_date']);
             $start = new DateTimeImmutable($trip['start_date']);
 
@@ -91,25 +91,33 @@ class HomeController extends Controller
             // calculate the days
             $days = $end->diff($start)->days;
 
-            // if it wasn't in a Schengen country, don't count it.
-            $diff = $this->inSchengen($trip) ? $days : $days * -1;
+            // if in schengen, add the days
+            if ($this->inSchengen($trip)) {
+                $diff = $days + 1; // inclusive
+            }
 
-            $used = $carry + $diff;
+            // unless it was in the middle of another schengen trip, deduct it
+            else if ($this->isInTheMiddleOfAnotherTrip($trip, $trips)) {
+                $diff = ($days - 1) * -1; // not inclusive
+            }
 
-            $used = max(0, $used); // can never use negative days
+            // otherwise, the trip doesn't use any days.
+            else {
+                $diff = 0;
+            }
 
             // add debugging info
             $debug[] = [
                 'start' => $start,
                 'end' => $end,
                 'days' => $days,
-                'diff' => $carry - $used,
+                'diff' => $diff,
             ];
 
-            return $used;
+            return $carry + $diff;
         }, 0);
 
-        // Add the days since they've been back (if end date is before $now)
+        // Add the days since they've been back (if they've returned before $now)
         $waiting = 0;
         $returned = new DateTimeImmutable($trips->sortBy('end_date')->last()['end_date']);
         if ($returned < $now) {
@@ -122,6 +130,20 @@ class HomeController extends Controller
         return view('calculate', compact('log', 'remaining', 'in', 'now', 'waiting'));
     }
 
+    protected function isInTheMiddleOfAnotherTrip($trip, $trips) {
+        $leave = new DateTimeImmutable($trip['start_date']);
+        $return = new DateTimeImmutable($trip['end_date']);
+
+        foreach ($trips as $trip) {
+            $start = new DateTimeImmutable($trip['start_date']);
+            $end = new DateTimeImmutable($trip['end_date']);
+
+            if ($leave > $start && $return < $end) return true;
+        }
+
+        return false;
+    }
+
     protected function getTripLog($trips, $debug)
     {
         $used = 0;
@@ -131,14 +153,17 @@ class HomeController extends Controller
         foreach ($trips as $i => $trip) {
             $diff = $debug[$i]['diff'];
 
+            $arrive = new DateTimeImmutable($trip['start_date']);
+            $leave = new DateTimeImmutable($trip['end_date']);
+
             $arr[] = [
                 'country' => $trip['primary_location'],
-                'arrive' => $debug[$i]['start'],
-                'leave' => $debug[$i]['end'],
-                'days' => $debug[$i]['days'],
+                'arrive' => $arrive,
+                'arrive_same' => $arrive == $debug[$i]['start'],
+                'leave' => $leave,
+                'leave_same' => $leave == $debug[$i]['end'],
                 'diff' => $debug[$i]['diff'],
-                'used' => $used -= $diff,
-                'remaining' => $remaining += $diff,
+                'remaining' => $remaining -= $diff,
             ];
         }
 

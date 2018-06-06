@@ -106,9 +106,9 @@
                     @foreach ($log as $trip)
                         <tr>
                             <td align="left">{{ $trip['country'] }}</td>
-                            <td>{{ $trip['arrive']->format('d M Y') }}</td>
-                            <td>{{ $trip['leave']->format('d M Y') }}</td>
-                            <td>{{ $trip['diff'] * -1 }}</td>
+                            <td style="font-style: {{ $trip['arrive_same'] ? 'normal' : 'italic' }};">{{ $trip['arrive']->format('d M Y') }}</td>
+                            <td style="font-style: {{ $trip['leave_same'] ? 'normal' : 'italic' }};">{{ $trip['leave']->format('d M Y') }}</td>
+                            <td>{{ $trip['diff'] }}</td>
                             <td>{{ $trip['remaining'] }}</td>
                         </tr>
                     @endforeach
