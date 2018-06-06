@@ -27,7 +27,10 @@ class Server extends BaseServer
      */
     public function urlAuthorization()
     {
-        return 'https://www.tripit.com/oauth/authorize';
+        $detect = new \Mobile_Detect();
+        $subdomain = $detect->isMobile() ? 'm' : 'www';
+
+        return "https://$subdomain.tripit.com/oauth/authorize";
     }
 
     /**
@@ -51,26 +54,7 @@ class Server extends BaseServer
      */
     public function userDetails($data, TokenCredentials $tokenCredentials)
     {
-        $user           = new User();
-        $user->id       = $data['id'];
-        $user->nickname = $data['nickname'];
-        $user->name     = $data['name'];
-        $user->email    = $data['email'];
-        $user->avatar   = $data['avatar'];
-
-        $used = ['id', 'nickname', 'name', 'email', 'avatar'];
-
-        dump($data);
-
-        foreach ($data as $key => $value) {
-            if (!in_array($key, $used)) {
-                $used[] = $key;
-            }
-        }
-
-        $user->extra = array_diff_key($data, array_flip($used));
-
-        return $user;
+        throw new \BadMethodCallException('TripIt does not have a user endpoint');
     }
 
     /**
